@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaLibrary.App", "MediaLibrary.App\MediaLibrary.App.csproj", "{95595A86-8556-4244-996E-BAFD778960FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaLibrary.Core", "MediaLibrary.Core\MediaLibrary.Core.csproj", "{7F42319C-B320-46CE-9E3F-1A3310DD5A3E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{95595A86-8556-4244-996E-BAFD778960FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95595A86-8556-4244-996E-BAFD778960FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95595A86-8556-4244-996E-BAFD778960FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95595A86-8556-4244-996E-BAFD778960FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F42319C-B320-46CE-9E3F-1A3310DD5A3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F42319C-B320-46CE-9E3F-1A3310DD5A3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F42319C-B320-46CE-9E3F-1A3310DD5A3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F42319C-B320-46CE-9E3F-1A3310DD5A3E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
