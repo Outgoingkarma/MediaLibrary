@@ -1,6 +1,6 @@
 ﻿
 
-using System.Linq.Expressions;
+using System.Linq;
 using MediaLibrary.Core;
 
 namespace MediaLibrary.App
@@ -11,14 +11,14 @@ namespace MediaLibrary.App
         {
             var items = new List<MediaItem>();
 
-            if (MediaFactory.TryCreateBook("The Hobbit", "", "123", out var hobbit))
+            if (MediaFactory.TryCreateBook("The Hobbit".CapitalizeTitle(), "", "123", out var hobbit))
             {
                 items.Add(hobbit);
             }
 
 
             var ddd = new Book(
-                name: "Clean code",
+                name: "Clean code".CapitalizeTitle(),
                 author: "Uncle bob",
                 pages: 216,
                 price: 39.88m,
@@ -29,11 +29,29 @@ namespace MediaLibrary.App
             var bundled = new BundleItem("Starter pack", 39.99m, hobbit, ddd);
             items.Add(bundled);
             
-            Predicate<MediaItem> expensivePredicate = item => item.Price > 30m;
-            var expensiveItems = items.FindAll(expensivePredicate);
+            var repository = new MediaRepository<MediaItem>();
+            repository.ItemAdded += (_, item) => Console.WriteLine($"[event] Added {item.Name} to repository");
 
 
             foreach (var item in items)
+            {
+                repository.Add(item);
+            }
+
+            try
+            {
+                repository.Add(new Book("Faulty", "Unknown", 10, -1m));
+            }
+            catch (InvalidMediaException ex)
+            {
+                Console.WriteLine($"Could not add item: {ex.Message}");
+            }
+            
+            Predicate<MediaItem> expensivePredicate = item => item.Price > 30m;
+            var expensiveItems = items.FindAll(expensivePredicate);
+            
+            
+            foreach (var item in repository)
             {
                 switch (item)
                 {
@@ -52,7 +70,7 @@ namespace MediaLibrary.App
                 }
             }
 
-            foreach (var item in items)
+            foreach (var item in repository)
             {
                 if (item is Book { Author: "Uncle Bob" } book)
                 {
@@ -67,12 +85,20 @@ namespace MediaLibrary.App
                 Console.WriteLine($"{ddd.Name} is discounted!");
             }
             
-            Console.WriteLine(hobbit.ToString("F", null));
+            Console.WriteLine(hobbit!.ToString("F", null));
             Console.WriteLine(ddd.ToString("S", null));
+            
+            var clonedBook = (Book) ddd.Clone();
+            Console.WriteLine($"Cloned book has name {clonedBook.Name} and id {clonedBook.Id}");
 
 
             var (id, title, price) = ddd;
             Console.WriteLine($"Deconstruction: id={id}, title= {title}, price= {price}");
+            
+            
+            var (titleOnly, author, pages) = ddd;
+            Console.WriteLine($"Extension deconstruction: {titleOnly} by {author} with {pages} pages");
+            
             
             var array = items.ToArray();
             var selectedRanfe = array.Length > 2 ? array[0..2] : array[..];
@@ -94,12 +120,15 @@ namespace MediaLibrary.App
             var firstReccomended = reccomendedArray?[0];
             Console.WriteLine(firstReccomended?.ToString() ?? "No reccomended items");
 
-            PrintItems(items, header: "All items");
+            PrintItems(repository, header: "All items");
             
             items.Sort();
             Console.WriteLine("Sorted items by price:");
-            PrintItems(items);
+            PrintItems(repository);
             
+            var discounted = repository.WithTag(MediaTags.Discounted).ToList();
+            Console.WriteLine($"Discounted count: {discounted.Count}");
+
             Console.WriteLine("The end, have a nice day!  ");
 
 
@@ -107,10 +136,10 @@ namespace MediaLibrary.App
 
         }
 
-        private static void PrintItems(IReadOnlyCollection<MediaItem> items, string header = "Goods")
+        private static void PrintItems(MediaRepository<MediaItem> repository, string header = "Goods")
         {
             Console.WriteLine($"{header}:");
-            foreach (var item in items)
+            foreach (var item in repository)
             {
                 Console.WriteLine(item);
             }

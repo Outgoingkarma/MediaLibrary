@@ -1,6 +1,8 @@
-﻿namespace MediaLibrary.Core
+﻿using System;
+
+namespace MediaLibrary.Core
 {
-    public sealed class Book : MediaItem
+    public sealed class Book : MediaItem, ICloneable
     {
         public Book(
             string name,
@@ -20,6 +22,11 @@
         public override string ToString()
         {
             return $"Title:{Name}, author: {Author}, price: {Price}$";
+        }
+
+        public object Clone()
+        {
+            return new Book(Name, Author, PageCount, Price, Tags);
         }
     }
 }
